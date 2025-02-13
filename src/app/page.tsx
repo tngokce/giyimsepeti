@@ -1,7 +1,12 @@
+'use client';
+
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
 
 export default function Home() {
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
   return (
     <div className="flex flex-col pt-20">
       {/* Hero Slider Section */}

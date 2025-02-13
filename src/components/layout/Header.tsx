@@ -3,12 +3,12 @@ import { Search, ShoppingCart, User, Menu } from 'lucide-react';
 
 export default function Header() {
   return (
-    <header className="absolute top-0 left-0 right-0 z-50">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="text-2xl font-bold text-gray-800">
-            Bandage
+            giyimSepeti
           </Link>
 
           {/* Mobile Menu Button */}
@@ -19,10 +19,10 @@ export default function Header() {
           {/* Main Navigation - Hidden on Mobile */}
           <nav className="hidden md:block">
             <ul className="flex space-x-6 text-gray-600">
-              <li><Link href="/" className="hover:text-gray-900">Home</Link></li>
-              <li><Link href="/product" className="hover:text-gray-900">Product</Link></li>
+              <li><Link href="/" className="hover:text-gray-900">Ana Sayfa</Link></li>
+              <li><Link href="/product" className="hover:text-gray-900"></Link></li>
               <li><Link href="/pricing" className="hover:text-gray-900">Pricing</Link></li>
-              <li><Link href="/contact" className="hover:text-gray-900">Contact</Link></li>
+              <li><Link href="/contact" className="hover:text-gray-900">İletişim</Link></li>
             </ul>
           </nav>
 
@@ -30,7 +30,7 @@ export default function Header() {
           <div className="flex items-center space-x-5">
             <div className="hidden md:flex items-center space-x-2 text-[#23A6F0]">
               <User className="w-5 h-5" />
-              <span>Login / Register</span>
+              <span>Giriş / Kayıt Ol</span>
             </div>
             <div className="flex items-center space-x-4">
               <button className="text-[#23A6F0]">

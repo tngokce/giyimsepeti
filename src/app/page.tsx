@@ -25,13 +25,13 @@ export default function Home() {
               <ChevronLeft className="w-8 h-8" />
             </button>
             <div className="text-center text-white">
-              <p className="text-lg mb-2">SUMMER 2020</p>
-              <h1 className="text-4xl font-bold mb-4">NEW<br/>COLLECTION</h1>
+              <p className="text-lg mb-2">YAZ 2025</p>
+              <h1 className="text-4xl font-bold mb-4">YENİ<br/>KOLEKSİYON</h1>
               <p className="text-sm mb-6 max-w-xs mx-auto">
-                We know how large objects will act, but things on a small scale.
+                Kendi tarzını yaratmak için doğru yerdesin.
               </p>
               <button className="bg-[#2DC071] hover:bg-[#2DC071]/90 text-white px-10 py-2.5 rounded-md">
-                SHOP NOW
+                ALIŞVERİŞE BAŞLA
               </button>
             </div>
             <button className="p-2 text-white hover:bg-white/10 rounded-full">

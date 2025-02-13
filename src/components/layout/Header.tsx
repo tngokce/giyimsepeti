@@ -20,7 +20,7 @@ export default function Header() {
           <nav className="hidden md:block">
             <ul className="flex space-x-6 text-gray-600">
               <li><Link href="/" className="hover:text-gray-900">Ana Sayfa</Link></li>
-              <li><Link href="/product" className="hover:text-gray-900"></Link></li>
+              <li><Link href="/product" className="hover:text-gray-900">Kategoriler</Link></li>
               <li><Link href="/pricing" className="hover:text-gray-900">Pricing</Link></li>
               <li><Link href="/contact" className="hover:text-gray-900">İletişim</Link></li>
             </ul>

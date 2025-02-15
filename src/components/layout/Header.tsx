@@ -7,6 +7,7 @@ import { useState } from 'react';
 export default function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
@@ -62,11 +63,18 @@ export default function Header() {
           </Link>
 
           {/* Mobile Menu Button */}
-          <button className="md:hidden">
-            <Menu className="w-6 h-6" />
+          <button 
+            className="md:hidden p-2 hover:bg-gray-100 rounded-lg"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
           </button>
 
-          {/* Main Navigation - Hidden on Mobile */}
+          {/* Desktop Navigation */}
           <nav className="hidden md:block">
             <ul className="flex space-x-6 text-gray-600">
               <li><Link href="/" className="hover:text-gray-900">Ana Sayfa</Link></li>
@@ -174,7 +182,83 @@ export default function Header() {
             </div>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden border-t border-gray-100">
+            <nav className="py-4">
+              <ul className="flex flex-col space-y-4">
+                <li>
+                  <Link 
+                    href="/" 
+                    className="block px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Ana Sayfa
+                  </Link>
+                </li>
+                <li>
+                  <button 
+                    className="w-full flex items-center justify-between px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  >
+                    <span>Kategoriler</span>
+                    <ChevronDown className="w-4 h-4" />
+                  </button>
+                  {isDropdownOpen && (
+                    <div className="pl-8 mt-2 space-y-2">
+                      <Link 
+                        href="/kadin"
+                        className="block px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        Kadın
+                      </Link>
+                      <Link 
+                        href="/erkek"
+                        className="block px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        Erkek
+                      </Link>
+                    </div>
+                  )}
+                </li>
+                <li>
+                  <Link 
+                    href="/pricing" 
+                    className="block px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Pricing
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    href="/contact" 
+                    className="block px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    İletişim
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    href="/login" 
+                    className="block px-4 py-2 text-[#23A6F0] hover:bg-gray-50 rounded-lg"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <User className="w-5 h-5" />
+                      <span>Giriş / Kayıt Ol</span>
+                    </div>
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        )}
       </div>
     </header>
   );
-} 
+}

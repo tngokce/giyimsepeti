@@ -157,7 +157,9 @@ export default function Header() {
                   </div>
                 )}
               </li>
-              <li><Link href="/pricing" className="hover:text-gray-900">Pricing</Link></li>
+              <li>
+                <Link href="/shop" className="hover:text-gray-900">Mağaza</Link>
+              </li>
               <li><Link href="/contact" className="hover:text-gray-900">İletişim</Link></li>
             </ul>
           </nav>
@@ -226,11 +228,11 @@ export default function Header() {
                 </li>
                 <li>
                   <Link 
-                    href="/pricing" 
+                    href="/shop" 
                     className="block px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    Pricing
+                    Mağaza
                   </Link>
                 </li>
                 <li>

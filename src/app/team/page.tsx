@@ -18,10 +18,10 @@ const teamMembers = [
     id: 2,
     name: 'Tuna Gökçe',
     role: 'Full Stack Developer',
-    image: '/images/team/tuna-gokce.jpg', // Kendi fotoğrafınız
-    linkedin: 'https://www.linkedin.com/in/tunagokce/',
-    github: 'https://github.com/tunagokce',
-    email: 'tuna@giyimsepeti.com'
+    image: '/images/AA2A9A6E-454A-4D0A-8863-723CFDE0C739_1_105_c.jpeg', // Fotoğraf yolu
+    linkedin: 'https://www.linkedin.com/in/tunahan-g%C3%B6k%C3%A7e-632496281/',
+    github: 'https://github.com/tngokce',
+    email: 'tunahanngokce@gmail.com'
   },
   // Diğer takım üyeleri...
 ];

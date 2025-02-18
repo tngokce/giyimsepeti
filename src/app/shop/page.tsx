@@ -4,16 +4,36 @@ import { useState } from 'react';
 import { Filter, ChevronDown } from 'lucide-react';
 import ProductCard from '@/components/product/ProductCard';
 
-// Örnek ürün verisi
+// Örnek ürün verisi güncellendi
 const products = [
   {
     id: '1',
     title: 'Basic Tişört',
     price: 199.99,
-    image: '/images/products/tshirt.jpg',
+    image: '/images/ryan-hoffman-6Nub980bI3I-unsplash.jpg',
     category: 'Kadın'
   },
-  // Daha fazla ürün eklenebilir...
+  {
+    id: '2',
+    title: 'Basic Tişört - Siyah',
+    price: 199.99,
+    image: '/images/ryan-hoffman-6Nub980bI3I-unsplash.jpg',
+    category: 'Kadın'
+  },
+  {
+    id: '3',
+    title: 'Basic Tişört - Beyaz',
+    price: 199.99,
+    image: '/images/ryan-hoffman-6Nub980bI3I-unsplash.jpg',
+    category: 'Kadın'
+  },
+  {
+    id: '4',
+    title: 'Basic Tişört - Gri',
+    price: 199.99,
+    image: '/images/ryan-hoffman-6Nub980bI3I-unsplash.jpg',
+    category: 'Kadın'
+  }
 ];
 
 export default function ShopPage() {

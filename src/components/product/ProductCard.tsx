@@ -14,7 +14,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ id, title, price, image, category }: ProductCardProps) {
   return (
-    <div className="group relative flex flex-col">
+    <Link href={`/product/${id}`} className="group relative flex flex-col">
       {/* Image Container */}
       <div className="relative aspect-square w-full overflow-hidden rounded-lg">
         <Image
@@ -48,6 +48,6 @@ export default function ProductCard({ id, title, price, image, category }: Produ
           {price.toLocaleString('tr-TR', { style: 'currency', currency: 'TRY' })}
         </p>
       </div>
-    </div>
+    </Link>
   );
 } 

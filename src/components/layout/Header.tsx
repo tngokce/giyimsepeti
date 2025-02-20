@@ -167,7 +167,11 @@ export default function Header() {
           <div className="flex items-center space-x-5">
             <div className="hidden md:flex items-center space-x-2 text-[#23A6F0]">
               <User className="w-5 h-5" />
-              <span>Giriş / Kayıt Ol</span>
+              <div className="flex space-x-2">
+                <Link href="/login" className="hover:text-[#1a7ac0]">Giriş</Link>
+                <span>/</span>
+                <Link href="/signup" className="hover:text-[#1a7ac0]">Kayıt Ol</Link>
+              </div>
             </div>
             <div className="flex items-center space-x-4">
               <button 
@@ -254,7 +258,7 @@ export default function Header() {
                 </li>
                 <li>
                   <Link 
-                    href="/login" 
+                    href="/signup" 
                     className="block px-4 py-2 text-[#23A6F0] hover:bg-gray-50 rounded-lg"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >

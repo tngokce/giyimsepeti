@@ -2,14 +2,11 @@
 
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
 
 export default function Home() {
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-
   return (
     <div className="flex flex-col pt-20">
-      {/* Hero Slider Section */}
+      {/* Hero Section */}
       <div className="relative w-full h-[calc(100vh-5rem)]">
         {/* Background Image */}
         <div className="absolute inset-0">
@@ -23,7 +20,7 @@ export default function Home() {
           />
         </div>
         
-        {/* Overlay for better text readability */}
+        {/* Content */}
         <div className="relative z-10 h-full bg-black/30">
           <div className="absolute inset-0 flex items-center justify-between px-4">
             <button className="p-2 text-white hover:bg-white/10 rounded-full">

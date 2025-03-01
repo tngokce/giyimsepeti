@@ -37,4 +37,27 @@ export const fetchRoles = () => async (dispatch: Dispatch) => {
   } catch (error) {
     console.error('Error fetching roles:', error);
   }
-}; 
+};
+
+// Login Thunk
+export const loginUser = (credentials: { email: string; password: string }, rememberMe: boolean) => 
+  async (dispatch: Dispatch) => {
+    try {
+      const response = await api.post('/login', credentials);
+      
+      // Kullanıcı bilgilerini store'a kaydet
+      dispatch(setUser(response.data.user));
+      
+      // Token'ı localStorage'a kaydet (eğer rememberMe seçiliyse)
+      if (rememberMe && response.data.token) {
+        localStorage.setItem('token', response.data.token);
+      }
+      
+      return { success: true, data: response.data };
+    } catch (error: any) {
+      return { 
+        success: false, 
+        error: error.response?.data?.message || 'Giriş başarısız oldu' 
+      };
+    }
+  }; 

@@ -4,12 +4,16 @@ import logger from 'redux-logger';
 import clientReducer from './reducers/clientReducer';
 import productReducer from './reducers/productReducer';
 import shoppingCartReducer from './reducers/shoppingCartReducer';
+import addressReducer from './reducers/addressReducer';
+import paymentReducer from './reducers/paymentReducer';
 
 // Root reducer oluşturma
 const rootReducer = combineReducers({
   client: clientReducer,
   product: productReducer,
-  shoppingCart: shoppingCartReducer
+  shoppingCart: shoppingCartReducer,
+  address: addressReducer,
+  payment: paymentReducer
 });
 
 // Store tipi tanımlama

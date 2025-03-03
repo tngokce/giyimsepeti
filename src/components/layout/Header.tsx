@@ -8,6 +8,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { setUser } from '@/redux/actions/clientActions';
 import md5 from 'md5';
+import { setAuthToken } from '@/lib/axios';
+import CategoryDropdown from './CategoryDropdown';
 
 export default function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -17,6 +19,7 @@ export default function Header() {
   
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.client.user);
+  const categories = useSelector((state: RootState) => state.product.categories);
 
   // Gravatar için email hash'i oluştur
   const getGravatarUrl = (email: string) => {
@@ -28,8 +31,8 @@ export default function Header() {
     // Kullanıcı bilgilerini temizle
     dispatch(setUser(null));
     
-    // LocalStorage'dan token'ı sil
-    localStorage.removeItem('token');
+    // Token'ı temizle
+    setAuthToken(null);
     
     // Kullanıcı menüsünü kapat
     setIsUserMenuOpen(false);
@@ -89,8 +92,8 @@ export default function Header() {
           </Link>
 
           {/* Mobile Menu Button */}
-          <button 
-            className="md:hidden p-2 hover:bg-gray-100 rounded-lg"
+          <button
+            className="md:hidden p-2 text-gray-500 hover:text-gray-700"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? (
@@ -102,86 +105,10 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:block">
-            <ul className="flex space-x-6 text-gray-600">
+            <ul className="flex items-center space-x-8">
               <li><Link href="/" className="hover:text-gray-900">Ana Sayfa</Link></li>
-              <li className="relative">
-                <button 
-                  className="flex items-center space-x-1 hover:text-gray-900"
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                >
-                  <span>Kategoriler</span>
-                  <ChevronDown className="w-4 h-4" />
-                </button>
-                
-                {/* Dropdown Menu */}
-                {isDropdownOpen && (
-                  <div className="absolute top-full left-0 w-48 bg-white shadow-lg rounded-md py-2 mt-1">
-                    <div className="flex">
-                      {/* Kadın Kategorileri */}
-                      <div className="w-full">
-                        <h3 className="px-4 py-2 text-sm font-semibold text-gray-900 bg-gray-50">
-                          Kadın
-                        </h3>
-                        <ul className="py-2">
-                          <li>
-                            <Link 
-                              href="/kadin/elbise" 
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                            >
-                              Elbise
-                            </Link>
-                          </li>
-                          <li>
-                            <Link 
-                              href="/kadin/tisort" 
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                            >
-                              T-shirt
-                            </Link>
-                          </li>
-                          <li>
-                            <Link 
-                              href="/kadin/pantolon" 
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                            >
-                              Pantolon
-                            </Link>
-                          </li>
-                        </ul>
-                        
-                        <h3 className="px-4 py-2 text-sm font-semibold text-gray-900 bg-gray-50">
-                          Erkek
-                        </h3>
-                        <ul className="py-2">
-                          <li>
-                            <Link 
-                              href="/erkek/tisort" 
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                            >
-                              T-shirt
-                            </Link>
-                          </li>
-                          <li>
-                            <Link 
-                              href="/erkek/pantolon" 
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                            >
-                              Pantolon
-                            </Link>
-                          </li>
-                          <li>
-                            <Link 
-                              href="/erkek/gomlek" 
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                            >
-                              Gömlek
-                            </Link>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                )}
+              <li>
+                <CategoryDropdown />
               </li>
               <li><Link href="/shop" className="hover:text-gray-900">Mağaza</Link></li>
               <li><Link href="/team" className="hover:text-gray-900">Ekibimiz</Link></li>
@@ -280,20 +207,21 @@ export default function Header() {
                   </button>
                   {isDropdownOpen && (
                     <div className="pl-8 mt-2 space-y-2">
-                      <Link 
-                        href="/kadin"
-                        className="block px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        Kadın
-                      </Link>
-                      <Link 
-                        href="/erkek"
-                        className="block px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        Erkek
-                      </Link>
+                      {categories.map((category) => {
+                        const slug = category.name ? category.name.toLowerCase().replace(/\s+/g, '-') : '';
+                        const genderSlug = category.gender ? category.gender.toLowerCase() : '';
+                        
+                        return (
+                          <Link 
+                            key={category.id}
+                            href={`/shop/${genderSlug}/${slug}/${category.id}`}
+                            className="block px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            {category.name || 'Kategori'}
+                          </Link>
+                        );
+                      })}
                     </div>
                   )}
                 </li>

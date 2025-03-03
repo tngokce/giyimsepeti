@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import ReduxProvider from "@/components/providers/ReduxProvider";
 import ToastProvider from "@/components/providers/ToastProvider";
+import AuthProvider from "@/components/providers/AuthProvider";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import "./globals.css";
@@ -22,14 +23,16 @@ export default function RootLayout({
     <html lang="tr">
       <body className={inter.className}>
         <ReduxProvider>
-          <ToastProvider />
-          <div className="min-h-screen flex flex-col">
-            <Header />
-            <main className="flex-grow">
-              {children}
-            </main>
-            <Footer />
-          </div>
+          <AuthProvider>
+            <ToastProvider />
+            <div className="min-h-screen flex flex-col">
+              <Header />
+              <main className="flex-grow">
+                {children}
+              </main>
+              <Footer />
+            </div>
+          </AuthProvider>
         </ReduxProvider>
       </body>
     </html>

@@ -7,6 +7,7 @@ import {
   SET_LANGUAGE,
   ClientActionTypes 
 } from '../reducers/clientReducer';
+import { setAuthToken } from '@/lib/axios';
 
 // Action Creators
 export const setUser = (user: any): ClientActionTypes => ({
@@ -48,9 +49,14 @@ export const loginUser = (credentials: { email: string; password: string }, reme
       // Kullanıcı bilgilerini store'a kaydet
       dispatch(setUser(response.data.user));
       
-      // Token'ı localStorage'a kaydet (eğer rememberMe seçiliyse)
-      if (rememberMe && response.data.token) {
-        localStorage.setItem('token', response.data.token);
+      // Token'ı kaydet (eğer rememberMe seçiliyse)
+      if (response.data.token) {
+        if (rememberMe) {
+          setAuthToken(response.data.token);
+        } else {
+          // Sadece session için token'ı ayarla, localStorage'a kaydetme
+          api.defaults.headers.common['Authorization'] = response.data.token;
+        }
       }
       
       return { success: true, data: response.data };
@@ -60,4 +66,35 @@ export const loginUser = (credentials: { email: string; password: string }, reme
         error: error.response?.data?.message || 'Giriş başarısız oldu' 
       };
     }
-  }; 
+  };
+
+// Token doğrulama thunk'ı
+export const verifyToken = () => async (dispatch: Dispatch) => {
+  const token = localStorage.getItem('token');
+  
+  if (!token) {
+    return { success: false };
+  }
+  
+  try {
+    // Token'ı axios header'ına ekle
+    setAuthToken(token);
+    
+    // Token doğrulama isteği
+    const response = await api.get('/verify');
+    
+    // Kullanıcı bilgilerini store'a kaydet
+    dispatch(setUser(response.data.user));
+    
+    // Yeni token varsa güncelle
+    if (response.data.token) {
+      setAuthToken(response.data.token);
+    }
+    
+    return { success: true, data: response.data };
+  } catch (error) {
+    // Token geçersizse temizle
+    setAuthToken(null);
+    return { success: false };
+  }
+}; 

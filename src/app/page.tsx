@@ -1,7 +1,9 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import PopularCategories from '@/components/category/PopularCategories';
 
 export default function Home() {
   return (
@@ -32,9 +34,11 @@ export default function Home() {
               <p className="text-sm mb-6 max-w-xs mx-auto">
                 Kendi tarzını yaratmak için doğru yerdesin.
               </p>
-              <button className="bg-[#2DC071] hover:bg-[#2DC071]/90 text-white px-10 py-2.5 rounded-md">
-                ALIŞVERİŞE BAŞLA
-              </button>
+              <Link href="/shop">
+                <button className="bg-[#2DC071] hover:bg-[#2DC071]/90 text-white px-10 py-2.5 rounded-md">
+                  ALIŞVERİŞE BAŞLA
+                </button>
+              </Link>
             </div>
             <button className="p-2 text-white hover:bg-white/10 rounded-full">
               <ChevronRight className="w-8 h-8" />
@@ -42,6 +46,9 @@ export default function Home() {
           </div>
         </div>
       </div>
+      
+      {/* Popular Categories Section */}
+      <PopularCategories />
     </div>
   );
 }

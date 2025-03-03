@@ -69,6 +69,7 @@ export const fetchProducts = (params?: {
   offset?: number; 
   categoryId?: number;
   filter?: string;
+  sort?: string;
 }) => async (dispatch: Dispatch) => {
   try {
     dispatch(setFetchState(FETCH_STATES.FETCHING));
@@ -79,6 +80,7 @@ export const fetchProducts = (params?: {
     if (params?.offset) queryParams.append('offset', params.offset.toString());
     if (params?.categoryId) queryParams.append('categoryId', params.categoryId.toString());
     if (params?.filter) queryParams.append('filter', params.filter);
+    if (params?.sort) queryParams.append('sort', params.sort);
     
     const queryString = queryParams.toString();
     const url = `/products${queryString ? `?${queryString}` : ''}`;

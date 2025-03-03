@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 import { RootState } from '@/redux/store';
-import { fetchProducts, setLimit, setOffset } from '@/redux/actions/productActions';
+import { fetchProducts, setLimit, setOffset, setFilter } from '@/redux/actions/productActions';
 import ProductCard from '@/components/product/ProductCard';
 
 export default function ShopPage() {
@@ -14,10 +14,13 @@ export default function ShopPage() {
     total, 
     limit, 
     offset, 
+    filter,
     fetchState 
   } = useSelector((state: RootState) => state.product);
   
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const [filterText, setFilterText] = useState(filter || '');
+  const [sortOption, setSortOption] = useState('');
   
   // Toplam sayfa sayısı
   const totalPages = Math.ceil(total / limit);
@@ -26,8 +29,13 @@ export default function ShopPage() {
   
   useEffect(() => {
     // @ts-ignore (Redux Thunk tiplemesi için)
-    dispatch(fetchProducts({ limit, offset }));
-  }, [dispatch, limit, offset]);
+    dispatch(fetchProducts({ 
+      limit, 
+      offset,
+      filter,
+      sort: sortOption
+    }));
+  }, [dispatch, limit, offset, filter, sortOption]);
   
   // Sayfa değiştirme
   const handlePageChange = (page: number) => {
@@ -41,6 +49,19 @@ export default function ShopPage() {
     const newLimit = parseInt(e.target.value);
     dispatch(setLimit(newLimit));
     dispatch(setOffset(0)); // Sayfa değiştiğinde offset'i sıfırla
+  };
+  
+  // Filtre uygulama
+  const handleFilterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    dispatch(setFilter(filterText));
+    dispatch(setOffset(0)); // Filtre değiştiğinde offset'i sıfırla
+  };
+  
+  // Sıralama değiştirme
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortOption(e.target.value);
+    dispatch(setOffset(0)); // Sıralama değiştiğinde offset'i sıfırla
   };
   
   return (
@@ -110,6 +131,32 @@ export default function ShopPage() {
                 </label>
               </div>
             </div>
+            
+            <div>
+              <h3 className="font-semibold mb-4">Renk</h3>
+              <div className="flex flex-wrap gap-2">
+                <button className="w-6 h-6 rounded-full bg-black border border-gray-300"></button>
+                <button className="w-6 h-6 rounded-full bg-white border border-gray-300"></button>
+                <button className="w-6 h-6 rounded-full bg-red-500 border border-gray-300"></button>
+                <button className="w-6 h-6 rounded-full bg-blue-500 border border-gray-300"></button>
+                <button className="w-6 h-6 rounded-full bg-green-500 border border-gray-300"></button>
+                <button className="w-6 h-6 rounded-full bg-yellow-500 border border-gray-300"></button>
+                <button className="w-6 h-6 rounded-full bg-purple-500 border border-gray-300"></button>
+                <button className="w-6 h-6 rounded-full bg-pink-500 border border-gray-300"></button>
+              </div>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold mb-4">Beden</h3>
+              <div className="flex flex-wrap gap-2">
+                <button className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded hover:bg-gray-100">XS</button>
+                <button className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded hover:bg-gray-100">S</button>
+                <button className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded hover:bg-gray-100">M</button>
+                <button className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded hover:bg-gray-100">L</button>
+                <button className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded hover:bg-gray-100">XL</button>
+                <button className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded hover:bg-gray-100">XXL</button>
+              </div>
+            </div>
           </div>
 
           {/* Mobile Filters */}
@@ -162,17 +209,51 @@ export default function ShopPage() {
 
           {/* Product Grid */}
           <div className="flex-1">
-            {/* Ürün Sayısı ve Sıralama */}
+            {/* Filtre ve Sıralama */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
               <p className="text-gray-600 mb-4 md:mb-0">
                 Toplam <span className="font-medium">{total}</span> ürün
               </p>
               
-              <div className="flex items-center space-x-4">
-                <label className="flex items-center space-x-2">
-                  <span className="text-sm text-gray-600">Sayfa başına:</span>
+              <div className="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-4 w-full md:w-auto">
+                {/* Filtre Formu */}
+                <form onSubmit={handleFilterSubmit} className="flex w-full md:w-auto">
+                  <input
+                    type="text"
+                    placeholder="Ürün ara..."
+                    className="border rounded-l px-3 py-1.5 text-sm flex-1"
+                    value={filterText}
+                    onChange={(e) => setFilterText(e.target.value)}
+                  />
+                  <button
+                    type="submit"
+                    className="bg-[#23A6F0] text-white px-3 py-1.5 text-sm rounded-r"
+                  >
+                    Filtrele
+                  </button>
+                </form>
+                
+                {/* Sıralama */}
+                <div className="flex items-center space-x-2 w-full md:w-auto">
+                  <label className="text-sm text-gray-600 whitespace-nowrap">Sırala:</label>
                   <select 
-                    className="border rounded p-1 text-sm"
+                    className="border rounded px-3 py-1.5 text-sm flex-1"
+                    value={sortOption}
+                    onChange={handleSortChange}
+                  >
+                    <option value="">Varsayılan</option>
+                    <option value="price:asc">Fiyat: Düşükten Yükseğe</option>
+                    <option value="price:desc">Fiyat: Yüksekten Düşüğe</option>
+                    <option value="rating:asc">Puan: Düşükten Yükseğe</option>
+                    <option value="rating:desc">Puan: Yüksekten Düşüğe</option>
+                  </select>
+                </div>
+                
+                {/* Sayfa Başına Ürün */}
+                <div className="flex items-center space-x-2 w-full md:w-auto">
+                  <label className="text-sm text-gray-600 whitespace-nowrap">Sayfa başına:</label>
+                  <select 
+                    className="border rounded px-3 py-1.5 text-sm"
                     value={limit}
                     onChange={handleLimitChange}
                   >
@@ -180,7 +261,7 @@ export default function ShopPage() {
                     <option value="24">24</option>
                     <option value="48">48</option>
                   </select>
-                </label>
+                </div>
               </div>
             </div>
             

@@ -6,6 +6,7 @@ import productReducer from './reducers/productReducer';
 import shoppingCartReducer from './reducers/shoppingCartReducer';
 import addressReducer from './reducers/addressReducer';
 import paymentReducer from './reducers/paymentReducer';
+import orderReducer from './reducers/orderReducer';
 
 // Root reducer oluşturma
 const rootReducer = combineReducers({
@@ -13,7 +14,8 @@ const rootReducer = combineReducers({
   product: productReducer,
   shoppingCart: shoppingCartReducer,
   address: addressReducer,
-  payment: paymentReducer
+  payment: paymentReducer,
+  order: orderReducer
 });
 
 // Store tipi tanımlama

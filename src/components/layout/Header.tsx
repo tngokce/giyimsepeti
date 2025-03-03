@@ -10,6 +10,7 @@ import { setUser } from '@/redux/actions/clientActions';
 import md5 from 'md5';
 import { setAuthToken } from '@/lib/axios';
 import CategoryDropdown from './CategoryDropdown';
+import CartDropdown from '../cart/CartDropdown';
 
 export default function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -175,10 +176,7 @@ export default function Header() {
               >
                 <Search className="w-5 h-5" />
               </button>
-              <button className="text-[#23A6F0]">
-                <ShoppingCart className="w-5 h-5" />
-              </button>
-              <span className="text-[#23A6F0]">1</span>
+              <CartDropdown />
             </div>
           </div>
         </div>

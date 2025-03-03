@@ -6,6 +6,7 @@ export const SET_FETCH_STATE = 'SET_FETCH_STATE';
 export const SET_LIMIT = 'SET_LIMIT';
 export const SET_OFFSET = 'SET_OFFSET';
 export const SET_FILTER = 'SET_FILTER';
+export const SET_PRODUCT_DETAIL = 'SET_PRODUCT_DETAIL';
 
 // Fetch States
 export const FETCH_STATES = {
@@ -51,6 +52,11 @@ interface SetFilterAction {
   payload: string;
 }
 
+interface SetProductDetailAction {
+  type: typeof SET_PRODUCT_DETAIL;
+  payload: any;
+}
+
 export type ProductActionTypes = 
   | SetCategoriesAction 
   | SetProductListAction 
@@ -58,7 +64,8 @@ export type ProductActionTypes =
   | SetFetchStateAction 
   | SetLimitAction 
   | SetOffsetAction 
-  | SetFilterAction;
+  | SetFilterAction 
+  | SetProductDetailAction;
 
 // Initial State
 interface ProductState {
@@ -69,6 +76,7 @@ interface ProductState {
   offset: number;
   filter: string;
   fetchState: string;
+  productDetail: any;
 }
 
 const initialState: ProductState = {
@@ -78,7 +86,8 @@ const initialState: ProductState = {
   limit: 25,
   offset: 0,
   filter: '',
-  fetchState: FETCH_STATES.NOT_FETCHED
+  fetchState: FETCH_STATES.NOT_FETCHED,
+  productDetail: null
 };
 
 // Reducer
@@ -118,6 +127,11 @@ const productReducer = (state = initialState, action: ProductActionTypes): Produ
       return {
         ...state,
         filter: action.payload
+      };
+    case SET_PRODUCT_DETAIL:
+      return {
+        ...state,
+        productDetail: action.payload
       };
     default:
       return state;

@@ -98,4 +98,27 @@ export const fetchProducts = (params?: {
     console.error('Error fetching products:', error);
     return { total: 0, products: [] };
   }
+};
+
+// Ürün detayını getirme thunk'ı
+export const fetchProductDetail = (productId: number) => async (dispatch: Dispatch) => {
+  try {
+    dispatch(setFetchState(FETCH_STATES.FETCHING));
+    
+    const response = await api.get(`/products/${productId}`);
+    
+    // Ürün detayını store'a kaydet
+    dispatch({
+      type: 'SET_PRODUCT_DETAIL',
+      payload: response.data
+    });
+    
+    dispatch(setFetchState(FETCH_STATES.FETCHED));
+    
+    return response.data;
+  } catch (error) {
+    dispatch(setFetchState(FETCH_STATES.FAILED));
+    console.error('Error fetching product detail:', error);
+    return null;
+  }
 }; 

@@ -57,10 +57,10 @@ export default function CartPage() {
   
   // Tüm ürünleri seçme/seçimini kaldırma
   const handleToggleAll = () => {
-    // Eğer tüm ürünler seçiliyse, tüm seçimleri kaldır
-    // Değilse, tüm ürünleri seç
     cart.forEach(item => {
-      if (allChecked || !item.checked) {
+      // Eğer tüm ürünler seçiliyse ve bu ürün seçiliyse, seçimi kaldır
+      // Eğer tüm ürünler seçili değilse ve bu ürün seçili değilse, seç
+      if ((allChecked && item.checked) || (!allChecked && !item.checked)) {
         dispatch(toggleCartItem(item.product.id));
       }
     });

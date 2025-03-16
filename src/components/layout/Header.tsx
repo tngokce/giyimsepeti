@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, ShoppingCart, User, Menu, ChevronDown, X, LogOut, ShoppingBag, Package } from 'lucide-react';
-import { useState, useRef } from 'react';
+import { Search, ShoppingCart, User, Menu, ChevronDown, X, LogOut } from 'lucide-react';
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { setUser } from '@/redux/actions/clientActions';
@@ -37,56 +37,6 @@ export default function Header() {
     
     // Kullanıcı menüsünü kapat
     setIsUserMenuOpen(false);
-  };
-
-  const UserMenu = ({ user, onLogout }: { user: any, onLogout: () => void }) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const menuRef = useRef<HTMLDivElement>(null);
-    
-    return (
-      <div className="relative" ref={menuRef}>
-        <button 
-          className="flex items-center text-gray-700 hover:text-[#23A6F0]"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          <User className="w-5 h-5 mr-1" />
-          <span className="text-sm">{user.name}</span>
-        </button>
-        
-        {isOpen && (
-          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-            <div className="py-1">
-              <Link 
-                href="/account" 
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                onClick={() => setIsOpen(false)}
-              >
-                <User className="w-4 h-4 inline-block mr-2" />
-                Hesabım
-              </Link>
-              <Link 
-                href="/account/orders" 
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                onClick={() => setIsOpen(false)}
-              >
-                <Package className="w-4 h-4 inline-block mr-2" />
-                Siparişlerim
-              </Link>
-              <button 
-                onClick={() => {
-                  onLogout();
-                  setIsOpen(false);
-                }}
-                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-              >
-                <LogOut className="w-4 h-4 inline-block mr-2" />
-                Çıkış Yap
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-    );
   };
 
   return (
@@ -171,7 +121,42 @@ export default function Header() {
           <div className="flex items-center space-x-5">
             {user ? (
               // Kullanıcı giriş yapmışsa
-              <UserMenu user={user} onLogout={handleLogout} />
+              <div className="hidden md:block relative">
+                <button 
+                  className="flex items-center space-x-2 text-gray-700 hover:text-gray-900"
+                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                >
+                  <div className="relative w-8 h-8 rounded-full overflow-hidden">
+                    <Image
+                      src={getGravatarUrl(user.email)}
+                      alt={user.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <span>{user.name}</span>
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+                
+                {isUserMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                    <Link 
+                      href="/profile" 
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => setIsUserMenuOpen(false)}
+                    >
+                      Profilim
+                    </Link>
+                    <button 
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                      onClick={handleLogout}
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Çıkış Yap
+                    </button>
+                  </div>
+                )}
+              </div>
             ) : (
               // Kullanıcı giriş yapmamışsa
               <div className="hidden md:flex items-center space-x-2 text-[#23A6F0]">

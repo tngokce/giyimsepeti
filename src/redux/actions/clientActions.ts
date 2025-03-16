@@ -5,6 +5,10 @@ import {
   SET_ROLES, 
   SET_THEME, 
   SET_LANGUAGE,
+  SET_ADDRESS_LIST,
+  ADD_ADDRESS,
+  UPDATE_ADDRESS,
+  DELETE_ADDRESS,
   ClientActionTypes 
 } from '../reducers/clientReducer';
 import { setAuthToken } from '@/lib/axios';
@@ -29,6 +33,26 @@ export const setTheme = (theme: string): ClientActionTypes => ({
 export const setLanguage = (language: string): ClientActionTypes => ({
   type: SET_LANGUAGE,
   payload: language
+});
+
+export const setAddressList = (addresses: any[]): ClientActionTypes => ({
+  type: SET_ADDRESS_LIST,
+  payload: addresses
+});
+
+export const addAddress = (address: any): ClientActionTypes => ({
+  type: ADD_ADDRESS,
+  payload: address
+});
+
+export const updateAddress = (address: any): ClientActionTypes => ({
+  type: UPDATE_ADDRESS,
+  payload: address
+});
+
+export const deleteAddress = (addressId: number): ClientActionTypes => ({
+  type: DELETE_ADDRESS,
+  payload: addressId
 });
 
 // Thunk Action Creator
@@ -94,5 +118,65 @@ export const verifyToken = () => async (dispatch: AppDispatch) => {
     delete api.defaults.headers.common['Authorization'];
     
     return { success: false };
+  }
+};
+
+// Fetch user addresses
+export const fetchAddresses = () => async (dispatch: AppDispatch) => {
+  try {
+    const response = await api.get('/user/address');
+    dispatch(setAddressList(response.data));
+    return { success: true, data: response.data };
+  } catch (error: any) {
+    console.error('Error fetching addresses:', error);
+    return { 
+      success: false, 
+      error: error.response?.data?.message || 'Adresleri getirme başarısız oldu' 
+    };
+  }
+};
+
+// Add new address
+export const createAddress = (addressData: any) => async (dispatch: AppDispatch) => {
+  try {
+    const response = await api.post('/user/address', addressData);
+    dispatch(addAddress(response.data));
+    return { success: true, data: response.data };
+  } catch (error: any) {
+    console.error('Error creating address:', error);
+    return { 
+      success: false, 
+      error: error.response?.data?.message || 'Adres ekleme başarısız oldu' 
+    };
+  }
+};
+
+// Update address
+export const updateAddressThunk = (addressData: any) => async (dispatch: AppDispatch) => {
+  try {
+    const response = await api.put('/user/address', addressData);
+    dispatch(updateAddress(response.data));
+    return { success: true, data: response.data };
+  } catch (error: any) {
+    console.error('Error updating address:', error);
+    return { 
+      success: false, 
+      error: error.response?.data?.message || 'Adres güncelleme başarısız oldu' 
+    };
+  }
+};
+
+// Delete address
+export const deleteAddressThunk = (addressId: number) => async (dispatch: AppDispatch) => {
+  try {
+    await api.delete(`/user/address/${addressId}`);
+    dispatch(deleteAddress(addressId));
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error deleting address:', error);
+    return { 
+      success: false, 
+      error: error.response?.data?.message || 'Adres silme başarısız oldu' 
+    };
   }
 }; 

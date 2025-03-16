@@ -3,6 +3,10 @@ export const SET_USER = 'SET_USER';
 export const SET_ROLES = 'SET_ROLES';
 export const SET_THEME = 'SET_THEME';
 export const SET_LANGUAGE = 'SET_LANGUAGE';
+export const SET_ADDRESS_LIST = 'SET_ADDRESS_LIST';
+export const ADD_ADDRESS = 'ADD_ADDRESS';
+export const UPDATE_ADDRESS = 'UPDATE_ADDRESS';
+export const DELETE_ADDRESS = 'DELETE_ADDRESS';
 
 // Action Interfaces
 interface SetUserAction {
@@ -25,11 +29,35 @@ interface SetLanguageAction {
   payload: string;
 }
 
+interface SetAddressListAction {
+  type: typeof SET_ADDRESS_LIST;
+  payload: any[];
+}
+
+interface AddAddressAction {
+  type: typeof ADD_ADDRESS;
+  payload: any;
+}
+
+interface UpdateAddressAction {
+  type: typeof UPDATE_ADDRESS;
+  payload: any;
+}
+
+interface DeleteAddressAction {
+  type: typeof DELETE_ADDRESS;
+  payload: number;
+}
+
 export type ClientActionTypes = 
   | SetUserAction 
   | SetRolesAction 
   | SetThemeAction 
-  | SetLanguageAction;
+  | SetLanguageAction
+  | SetAddressListAction
+  | AddAddressAction
+  | UpdateAddressAction
+  | DeleteAddressAction;
 
 // Initial State
 interface ClientState {
@@ -72,6 +100,28 @@ const clientReducer = (state = initialState, action: ClientActionTypes): ClientS
       return {
         ...state,
         language: action.payload
+      };
+    case SET_ADDRESS_LIST:
+      return {
+        ...state,
+        addressList: action.payload
+      };
+    case ADD_ADDRESS:
+      return {
+        ...state,
+        addressList: [...state.addressList, action.payload]
+      };
+    case UPDATE_ADDRESS:
+      return {
+        ...state,
+        addressList: state.addressList.map(address => 
+          address.id === action.payload.id ? action.payload : address
+        )
+      };
+    case DELETE_ADDRESS:
+      return {
+        ...state,
+        addressList: state.addressList.filter(address => address.id !== action.payload)
       };
     default:
       return state;

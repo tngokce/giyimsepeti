@@ -34,7 +34,7 @@ interface AddToCartAction {
 
 interface RemoveFromCartAction {
   type: typeof REMOVE_FROM_CART;
-  payload: number; // product id
+  payload: number; // Product ID
 }
 
 interface UpdateCartItemAction {
@@ -51,7 +51,7 @@ interface ClearCartAction {
 
 interface ToggleCartItemAction {
   type: typeof TOGGLE_CART_ITEM;
-  payload: number; // product id
+  payload: number; // Product ID
 }
 
 export type ShoppingCartActionTypes = 

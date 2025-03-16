@@ -27,7 +27,7 @@ export const setAddress = (address: any): ShoppingCartActionTypes => ({
   payload: address
 });
 
-export const addToCart = (product: any, count: number): ShoppingCartActionTypes => ({
+export const addToCart = (product: any, count: number = 1): ShoppingCartActionTypes => ({
   type: ADD_TO_CART,
   payload: { product, count }
 });

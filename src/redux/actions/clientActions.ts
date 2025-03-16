@@ -9,6 +9,10 @@ import {
   ADD_ADDRESS,
   UPDATE_ADDRESS,
   DELETE_ADDRESS,
+  SET_CREDIT_CARDS,
+  ADD_CREDIT_CARD,
+  UPDATE_CREDIT_CARD,
+  DELETE_CREDIT_CARD,
   ClientActionTypes 
 } from '../reducers/clientReducer';
 import { setAuthToken } from '@/lib/axios';
@@ -53,6 +57,26 @@ export const updateAddress = (address: any): ClientActionTypes => ({
 export const deleteAddress = (addressId: number): ClientActionTypes => ({
   type: DELETE_ADDRESS,
   payload: addressId
+});
+
+export const setCreditCards = (cards: any[]): ClientActionTypes => ({
+  type: SET_CREDIT_CARDS,
+  payload: cards
+});
+
+export const addCreditCard = (card: any): ClientActionTypes => ({
+  type: ADD_CREDIT_CARD,
+  payload: card
+});
+
+export const updateCreditCard = (card: any): ClientActionTypes => ({
+  type: UPDATE_CREDIT_CARD,
+  payload: card
+});
+
+export const deleteCreditCard = (cardId: number): ClientActionTypes => ({
+  type: DELETE_CREDIT_CARD,
+  payload: cardId
 });
 
 // Thunk Action Creator
@@ -177,6 +201,66 @@ export const deleteAddressThunk = (addressId: number) => async (dispatch: AppDis
     return { 
       success: false, 
       error: error.response?.data?.message || 'Adres silme başarısız oldu' 
+    };
+  }
+};
+
+// Fetch credit cards
+export const fetchCreditCards = () => async (dispatch: AppDispatch) => {
+  try {
+    const response = await api.get('/user/card');
+    dispatch(setCreditCards(response.data));
+    return { success: true, data: response.data };
+  } catch (error: any) {
+    console.error('Error fetching credit cards:', error);
+    return { 
+      success: false, 
+      error: error.response?.data?.message || 'Kredi kartlarını getirme başarısız oldu' 
+    };
+  }
+};
+
+// Add new credit card
+export const createCreditCard = (cardData: any) => async (dispatch: AppDispatch) => {
+  try {
+    const response = await api.post('/user/card', cardData);
+    dispatch(addCreditCard(response.data));
+    return { success: true, data: response.data };
+  } catch (error: any) {
+    console.error('Error creating credit card:', error);
+    return { 
+      success: false, 
+      error: error.response?.data?.message || 'Kredi kartı ekleme başarısız oldu' 
+    };
+  }
+};
+
+// Update credit card
+export const updateCreditCardThunk = (cardData: any) => async (dispatch: AppDispatch) => {
+  try {
+    const response = await api.put('/user/card', cardData);
+    dispatch(updateCreditCard(response.data));
+    return { success: true, data: response.data };
+  } catch (error: any) {
+    console.error('Error updating credit card:', error);
+    return { 
+      success: false, 
+      error: error.response?.data?.message || 'Kredi kartı güncelleme başarısız oldu' 
+    };
+  }
+};
+
+// Delete credit card
+export const deleteCreditCardThunk = (cardId: number) => async (dispatch: AppDispatch) => {
+  try {
+    await api.delete(`/user/card/${cardId}`);
+    dispatch(deleteCreditCard(cardId));
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error deleting credit card:', error);
+    return { 
+      success: false, 
+      error: error.response?.data?.message || 'Kredi kartı silme başarısız oldu' 
     };
   }
 }; 

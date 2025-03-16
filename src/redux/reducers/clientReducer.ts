@@ -7,6 +7,10 @@ export const SET_ADDRESS_LIST = 'SET_ADDRESS_LIST';
 export const ADD_ADDRESS = 'ADD_ADDRESS';
 export const UPDATE_ADDRESS = 'UPDATE_ADDRESS';
 export const DELETE_ADDRESS = 'DELETE_ADDRESS';
+export const SET_CREDIT_CARDS = 'SET_CREDIT_CARDS';
+export const ADD_CREDIT_CARD = 'ADD_CREDIT_CARD';
+export const UPDATE_CREDIT_CARD = 'UPDATE_CREDIT_CARD';
+export const DELETE_CREDIT_CARD = 'DELETE_CREDIT_CARD';
 
 // Action Interfaces
 interface SetUserAction {
@@ -49,6 +53,26 @@ interface DeleteAddressAction {
   payload: number;
 }
 
+interface SetCreditCardsAction {
+  type: typeof SET_CREDIT_CARDS;
+  payload: any[];
+}
+
+interface AddCreditCardAction {
+  type: typeof ADD_CREDIT_CARD;
+  payload: any;
+}
+
+interface UpdateCreditCardAction {
+  type: typeof UPDATE_CREDIT_CARD;
+  payload: any;
+}
+
+interface DeleteCreditCardAction {
+  type: typeof DELETE_CREDIT_CARD;
+  payload: number;
+}
+
 export type ClientActionTypes = 
   | SetUserAction 
   | SetRolesAction 
@@ -57,7 +81,11 @@ export type ClientActionTypes =
   | SetAddressListAction
   | AddAddressAction
   | UpdateAddressAction
-  | DeleteAddressAction;
+  | DeleteAddressAction
+  | SetCreditCardsAction
+  | AddCreditCardAction
+  | UpdateCreditCardAction
+  | DeleteCreditCardAction;
 
 // Initial State
 interface ClientState {
@@ -122,6 +150,28 @@ const clientReducer = (state = initialState, action: ClientActionTypes): ClientS
       return {
         ...state,
         addressList: state.addressList.filter(address => address.id !== action.payload)
+      };
+    case SET_CREDIT_CARDS:
+      return {
+        ...state,
+        creditCards: action.payload
+      };
+    case ADD_CREDIT_CARD:
+      return {
+        ...state,
+        creditCards: [...state.creditCards, action.payload]
+      };
+    case UPDATE_CREDIT_CARD:
+      return {
+        ...state,
+        creditCards: state.creditCards.map(card => 
+          card.id === action.payload.id ? action.payload : card
+        )
+      };
+    case DELETE_CREDIT_CARD:
+      return {
+        ...state,
+        creditCards: state.creditCards.filter(card => card.id !== action.payload)
       };
     default:
       return state;

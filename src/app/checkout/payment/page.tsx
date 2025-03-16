@@ -12,7 +12,7 @@ import {
   updateCreditCardThunk, 
   deleteCreditCardThunk 
 } from '@/redux/actions/clientActions';
-import { setPayment } from '@/redux/actions/shoppingCartActions';
+import { setPayment, createOrder } from '@/redux/actions/shoppingCartActions';
 import ProtectedRoute from '@/components/common/ProtectedRoute';
 import CreditCardList from '@/components/checkout/CreditCardList';
 import CreditCardForm, { CreditCardFormData } from '@/components/checkout/CreditCardForm';
@@ -30,6 +30,8 @@ export default function PaymentPage() {
   );
   const [use3DSecure, setUse3DSecure] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [cvv, setCvv] = useState('');
+  const [cvvError, setCvvError] = useState('');
 
   // Fetch credit cards on component mount
   useEffect(() => {
@@ -198,19 +200,83 @@ export default function PaymentPage() {
     }
   };
 
+  // CVV değişikliğini işle
+  const handleCvvChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[^\d]/g, '').substring(0, 3);
+    setCvv(value);
+    
+    if (value.length < 3) {
+      setCvvError('CVV 3 haneli olmalıdır');
+    } else {
+      setCvvError('');
+    }
+  };
+
   // Handle complete order
-  const handleCompleteOrder = () => {
+  const handleCompleteOrder = async () => {
     if (!selectedCardId) {
       toast.error('Lütfen bir kart seçin veya yeni kart ekleyin.');
       return;
     }
-    
-    // Here you would typically make an API call to create the order
-    // For now, we'll just show a success message
-    toast.success('Siparişiniz başarıyla oluşturuldu!');
-    
-    // Navigate to order confirmation page
-    // router.push('/checkout/confirmation');
+
+    if (!address) {
+      toast.error('Lütfen bir teslimat adresi seçin.');
+      return;
+    }
+
+    if (cvv.length !== 3) {
+      setCvvError('CVV 3 haneli olmalıdır');
+      toast.error('Lütfen geçerli bir CVV girin.');
+      return;
+    }
+
+    // Seçili kartı bul
+    const selectedCard = creditCards.find(card => card.id === selectedCardId);
+    if (!selectedCard) {
+      toast.error('Seçili kart bulunamadı.');
+      return;
+    }
+
+    // Sipariş için ürünleri hazırla
+    const products = cart.map(item => ({
+      product_id: item.product.id,
+      count: item.count,
+      detail: item.product.name // Ürün detayı olarak ürün adını kullanıyoruz, gerçek uygulamada varyasyon bilgisi olabilir
+    }));
+
+    // Toplam fiyatı hesapla
+    const totalPrice = calculateTotal();
+
+    // Sipariş verisi oluştur
+    const orderData = {
+      address_id: address.id,
+      order_date: new Date().toISOString(),
+      card_no: parseInt(selectedCard.card_no.replace(/\s/g, '')),
+      card_name: selectedCard.name_on_card,
+      card_expire_month: selectedCard.expire_month,
+      card_expire_year: selectedCard.expire_year,
+      card_ccv: parseInt(cvv),
+      price: totalPrice,
+      products: products
+    };
+
+    try {
+      setIsLoading(true);
+      // @ts-ignore (Redux Thunk tiplemesi için)
+      const result = await dispatch(createOrder(orderData));
+      
+      if (result && result.success) {
+        // Sipariş başarılı, onay sayfasına yönlendir
+        router.push('/checkout/confirmation');
+      } else {
+        toast.error(result?.error || 'Sipariş oluşturulurken bir hata oluştu.');
+      }
+    } catch (error) {
+      console.error('Sipariş oluşturma hatası:', error);
+      toast.error('Sipariş işlemi sırasında bir hata oluştu.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Calculate total price
@@ -286,7 +352,7 @@ export default function PaymentPage() {
               {/* 3D Secure Option */}
               {!showCardForm && creditCards.length > 0 && (
                 <div className="mt-6 border-t pt-6">
-                  <label className="flex items-center cursor-pointer">
+                  <label className="flex items-center cursor-pointer mb-6">
                     <input
                       type="checkbox"
                       checked={use3DSecure}
@@ -295,6 +361,32 @@ export default function PaymentPage() {
                     />
                     <span className="ml-2 text-gray-700">3D Secure ile ödemek istiyorum</span>
                   </label>
+                  
+                  {/* CVV Input */}
+                  {selectedCardId && (
+                    <div className="mt-4">
+                      <label htmlFor="cvv" className="block text-sm font-medium text-gray-700 mb-1">
+                        CVV
+                      </label>
+                      <div className="max-w-xs">
+                        <input
+                          id="cvv"
+                          type="text"
+                          value={cvv}
+                          onChange={handleCvvChange}
+                          placeholder="123"
+                          maxLength={3}
+                          className={`w-full px-3 py-2 border rounded-md ${cvvError ? 'border-red-500' : 'border-gray-300'}`}
+                        />
+                        {cvvError && (
+                          <p className="mt-1 text-sm text-red-500">{cvvError}</p>
+                        )}
+                        <p className="mt-1 text-xs text-gray-500">
+                          Kartınızın arkasındaki 3 haneli güvenlik kodu
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

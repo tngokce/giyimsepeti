@@ -9,6 +9,7 @@ import {
   TOGGLE_CART_ITEM,
   ShoppingCartActionTypes 
 } from '../reducers/shoppingCartReducer';
+import { AppDispatch } from '../store';
 
 // Action Creators
 export const setCart = (cart: any[]): ShoppingCartActionTypes => ({

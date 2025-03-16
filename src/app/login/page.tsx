@@ -3,11 +3,13 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
 import md5 from 'md5';
 import { loginUser } from '@/redux/actions/clientActions';
+import { useAppDispatch } from '@/redux/hooks';
+import { RootState } from '@/redux/store';
 
 interface LoginForm {
   email: string;
@@ -18,7 +20,7 @@ interface LoginForm {
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   
   const {
     register,
@@ -34,18 +36,25 @@ export default function LoginPage() {
     setIsLoading(true);
     
     try {
-      // @ts-ignore (Redux Thunk tiplemesi için)
       const result = await dispatch(loginUser(
         { email: data.email, password: data.password },
         data.rememberMe
       ));
       
-      if (result.success) {
+      if (result && typeof result === 'object' && 'success' in result && result.success) {
         toast.success('Giriş başarılı!');
         // Önceki sayfaya yönlendir veya ana sayfaya git
         router.back();
       } else {
-        toast.error(result.error);
+        const errorMessage = 
+          result && 
+          typeof result === 'object' && 
+          'error' in result && 
+          result.error ? 
+            String(result.error) : 
+            'Giriş başarısız';
+        
+        toast.error(errorMessage);
       }
     } catch (error) {
       toast.error('Bir hata oluştu. Lütfen tekrar deneyin.');

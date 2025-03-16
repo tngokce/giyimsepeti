@@ -1,17 +1,18 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ShoppingCart, X, Trash2 } from 'lucide-react';
 import { RootState } from '@/redux/store';
+import { useAppDispatch } from '@/redux/hooks';
 import { removeFromCart, updateCartItem } from '@/redux/actions/shoppingCartActions';
 
 export default function CartDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   
   const { cart } = useSelector((state: RootState) => state.shoppingCart);
   

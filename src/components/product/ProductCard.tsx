@@ -1,33 +1,47 @@
 'use client';
 
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ShoppingCart, Heart } from 'lucide-react';
-import { useDispatch } from 'react-redux';
+import { Heart, ShoppingCart, Star } from 'lucide-react';
+import { RootState } from '@/redux/store';
+import { useAppDispatch } from '@/redux/hooks';
 import { addToCart } from '@/redux/actions/shoppingCartActions';
 
 interface ProductCardProps {
   id: number;
   title: string;
   price: number;
-  image: string;
+  originalPrice?: number;
+  discount?: number;
+  rating?: number;
+  reviewCount?: number;
+  imageUrl: string;
   category?: string;
-  categoryId?: number;
   gender?: string;
-  discountPercentage?: number;
+  isNew?: boolean;
+  isFeatured?: boolean;
 }
 
-export default function ProductCard({ 
-  id, 
-  title, 
-  price, 
-  image, 
+export default function ProductCard({
+  id,
+  title,
+  price,
+  originalPrice,
+  discount,
+  rating = 0,
+  reviewCount = 0,
+  imageUrl,
   category,
-  categoryId,
   gender,
-  discountPercentage 
+  isNew = false,
+  isFeatured = false
 }: ProductCardProps) {
-  const dispatch = useDispatch();
+  const [isHovered, setIsHovered] = useState(false);
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   
   // Fiyat formatı
   const formatPrice = (price: number) => {
@@ -39,8 +53,8 @@ export default function ProductCard({
   };
   
   // İndirimli fiyat hesaplama
-  const discountedPrice = discountPercentage 
-    ? price - (price * discountPercentage / 100) 
+  const discountedPrice = discount 
+    ? originalPrice ? originalPrice - (originalPrice * discount / 100) : null
     : null;
   
   // URL slug oluşturma
@@ -49,9 +63,7 @@ export default function ProductCard({
   const genderSlug = gender ? gender.toLowerCase() : 'unisex';
   
   // Ürün detay sayfası URL'si
-  const productUrl = categoryId 
-    ? `/shop/${genderSlug}/${categorySlug}/${categoryId}/${productSlug}/${id}`
-    : `/product/${id}`;
+  const productUrl = category ? `/shop/${genderSlug}/${categorySlug}/${id}/${productSlug}` : `/product/${id}`;
   
   // Sepete ekleme işlevi
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -63,7 +75,7 @@ export default function ProductCard({
         id, 
         name: title, 
         price, 
-        images: [{ url: image }],
+        images: [{ url: imageUrl }],
         stock: 100 // Varsayılan stok değeri
       }, 
       1
@@ -80,7 +92,7 @@ export default function ProductCard({
         <Link href={productUrl}>
           <div className="relative h-full w-full">
             <Image
-              src={image || '/images/product-placeholder.jpg'}
+              src={imageUrl || '/images/product-placeholder.jpg'}
               alt={title}
               fill
               className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -89,9 +101,9 @@ export default function ProductCard({
         </Link>
         
         {/* İndirim Etiketi */}
-        {discountPercentage && (
+        {discount && (
           <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-            %{discountPercentage} İndirim
+            %{discount} İndirim
           </div>
         )}
         
@@ -123,7 +135,7 @@ export default function ProductCard({
           {discountedPrice ? (
             <>
               <span className="text-[#23A6F0] font-semibold">{formatPrice(discountedPrice)}</span>
-              <span className="text-gray-400 text-sm line-through">{formatPrice(price)}</span>
+              <span className="text-gray-400 text-sm line-through">{formatPrice(originalPrice || price)}</span>
             </>
           ) : (
             <span className="text-[#23A6F0] font-semibold">{formatPrice(price)}</span>

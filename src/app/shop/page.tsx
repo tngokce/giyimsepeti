@@ -1,15 +1,19 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
 import { Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 import { RootState } from '@/redux/store';
+import { useAppDispatch } from '@/redux/hooks';
 import { fetchProducts, setLimit, setOffset, setFilter } from '@/redux/actions/productActions';
 import ProductCard from '@/components/product/ProductCard';
 import Pagination from '@/components/common/Pagination';
+import CategoryDropdown from '@/components/layout/CategoryDropdown';
 
 export default function ShopPage() {
-  const dispatch = useDispatch();
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   const { 
     productList, 
     total, 
@@ -280,16 +284,17 @@ export default function ShopPage() {
                 <p className="text-gray-500">Ürün bulunamadı.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {productList.map((product: any) => (
-                  <ProductCard
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {productList.map((product) => (
+                  <ProductCard 
                     key={product.id}
                     id={product.id}
                     title={product.name}
                     price={product.price}
-                    image={product.image || '/images/product-placeholder.jpg'}
+                    imageUrl={product.image || '/images/product-placeholder.jpg'}
                     category={product.category?.name}
-                    discountPercentage={product.discountPercentage}
+                    discount={product.discountPercentage}
+                    rating={product.rating}
                   />
                 ))}
               </div>

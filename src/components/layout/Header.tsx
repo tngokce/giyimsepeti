@@ -3,9 +3,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Search, ShoppingCart, User, Menu, ChevronDown, X, LogOut } from 'lucide-react';
-import { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { usePathname } from 'next/navigation';
 import { RootState } from '@/redux/store';
+import { useAppDispatch } from '@/redux/hooks';
 import { setUser } from '@/redux/actions/clientActions';
 import md5 from 'md5';
 import { setAuthToken } from '@/lib/axios';
@@ -17,8 +19,9 @@ export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  
-  const dispatch = useDispatch();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const pathname = usePathname();
+  const dispatch = useAppDispatch();
   const user = useSelector((state: RootState) => state.client.user);
   const categories = useSelector((state: RootState) => state.product.categories);
 

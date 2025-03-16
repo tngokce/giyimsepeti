@@ -8,6 +8,7 @@ import {
   ClientActionTypes 
 } from '../reducers/clientReducer';
 import { setAuthToken } from '@/lib/axios';
+import { AppDispatch } from '../store';
 
 // Action Creators
 export const setUser = (user: any): ClientActionTypes => ({
@@ -31,7 +32,7 @@ export const setLanguage = (language: string): ClientActionTypes => ({
 });
 
 // Thunk Action Creator
-export const fetchRoles = () => async (dispatch: Dispatch) => {
+export const fetchRoles = () => async (dispatch: AppDispatch) => {
   try {
     const response = await api.get('/roles');
     dispatch(setRoles(response.data));
@@ -42,7 +43,7 @@ export const fetchRoles = () => async (dispatch: Dispatch) => {
 
 // Login Thunk
 export const loginUser = (credentials: { email: string; password: string }, rememberMe: boolean) => 
-  async (dispatch: Dispatch) => {
+  async (dispatch: AppDispatch) => {
     try {
       const response = await api.post('/login', credentials);
       
@@ -69,7 +70,7 @@ export const loginUser = (credentials: { email: string; password: string }, reme
   };
 
 // Token doğrulama thunk'ı
-export const verifyToken = () => async (dispatch: Dispatch) => {
+export const verifyToken = () => async (dispatch: AppDispatch) => {
   const token = localStorage.getItem('token');
   
   if (!token) {
@@ -78,23 +79,20 @@ export const verifyToken = () => async (dispatch: Dispatch) => {
   
   try {
     // Token'ı axios header'ına ekle
-    setAuthToken(token);
+    api.defaults.headers.common['Authorization'] = token;
     
-    // Token doğrulama isteği
-    const response = await api.get('/verify');
+    // Kullanıcı bilgilerini al
+    const response = await api.get('/me');
     
     // Kullanıcı bilgilerini store'a kaydet
-    dispatch(setUser(response.data.user));
-    
-    // Yeni token varsa güncelle
-    if (response.data.token) {
-      setAuthToken(response.data.token);
-    }
+    dispatch(setUser(response.data));
     
     return { success: true, data: response.data };
   } catch (error) {
-    // Token geçersizse temizle
-    setAuthToken(null);
+    // Token geçersiz, temizle
+    localStorage.removeItem('token');
+    delete api.defaults.headers.common['Authorization'];
+    
     return { success: false };
   }
 }; 

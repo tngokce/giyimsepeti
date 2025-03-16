@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 import { RootState } from '@/redux/store';
+import { useAppDispatch } from '@/redux/hooks';
 import { fetchProducts, setLimit, setOffset, setFilter } from '@/redux/actions/productActions';
 import ProductCard from '@/components/product/ProductCard';
 import Pagination from '@/components/common/Pagination';
@@ -12,7 +13,7 @@ import Pagination from '@/components/common/Pagination';
 export default function CategoryPage() {
   const params = useParams();
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   
   const { gender, category, id } = params;
   const categoryId = typeof id === 'string' ? parseInt(id) : undefined;
@@ -248,16 +249,17 @@ export default function CategoryPage() {
                 <p className="text-gray-500">Ürün bulunamadı.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {productList.map((product: any) => (
-                  <ProductCard
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {productList.map((product) => (
+                  <ProductCard 
                     key={product.id}
                     id={product.id}
                     title={product.name}
                     price={product.price}
-                    image={product.image || '/images/product-placeholder.jpg'}
+                    imageUrl={product.image || '/images/product-placeholder.jpg'}
                     category={product.category?.name}
-                    discountPercentage={product.discountPercentage}
+                    discount={product.discountPercentage}
+                    rating={product.rating}
                   />
                 ))}
               </div>

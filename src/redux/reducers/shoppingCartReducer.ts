@@ -69,6 +69,7 @@ interface ShoppingCartState {
   cart: Array<{
     count: number;
     product: any;
+    checked: boolean;
   }>;
   payment: any;
   address: any;

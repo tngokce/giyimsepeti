@@ -14,8 +14,10 @@ const rootReducer = combineReducers({
 
 // Store tipi tanımlama
 export type RootState = ReturnType<typeof rootReducer>;
+export type AppDispatch = any; // Geçici çözüm
 
 // Store oluşturma
+// @ts-ignore
 const store = createStore(
   rootReducer,
   applyMiddleware(thunk, logger)

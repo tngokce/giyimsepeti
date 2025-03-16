@@ -13,6 +13,7 @@ import {
   ADD_CREDIT_CARD,
   UPDATE_CREDIT_CARD,
   DELETE_CREDIT_CARD,
+  SET_ORDERS,
   ClientActionTypes 
 } from '../reducers/clientReducer';
 import { setAuthToken } from '@/lib/axios';
@@ -77,6 +78,11 @@ export const updateCreditCard = (card: any): ClientActionTypes => ({
 export const deleteCreditCard = (cardId: number): ClientActionTypes => ({
   type: DELETE_CREDIT_CARD,
   payload: cardId
+});
+
+export const setOrders = (orders: any[]): ClientActionTypes => ({
+  type: SET_ORDERS,
+  payload: orders
 });
 
 // Thunk Action Creator
@@ -261,6 +267,21 @@ export const deleteCreditCardThunk = (cardId: number) => async (dispatch: AppDis
     return { 
       success: false, 
       error: error.response?.data?.message || 'Kredi kartı silme başarısız oldu' 
+    };
+  }
+};
+
+// Fetch user orders
+export const fetchOrders = () => async (dispatch: AppDispatch) => {
+  try {
+    const response = await api.get('/order');
+    dispatch(setOrders(response.data));
+    return { success: true, data: response.data };
+  } catch (error: any) {
+    console.error('Error fetching orders:', error);
+    return { 
+      success: false, 
+      error: error.response?.data?.message || 'Siparişleri getirme başarısız oldu' 
     };
   }
 }; 

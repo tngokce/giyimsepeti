@@ -150,6 +150,13 @@ export default function Header() {
                     >
                       Profilim
                     </Link>
+                    <Link 
+                      href="/account/orders" 
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => setIsUserMenuOpen(false)}
+                    >
+                      Siparişlerim
+                    </Link>
                     <button 
                       className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                       onClick={handleLogout}
@@ -279,6 +286,13 @@ export default function Header() {
                           onClick={() => setIsMobileMenuOpen(false)}
                         >
                           Profilim
+                        </Link>
+                        <Link 
+                          href="/account/orders" 
+                          className="block px-2 py-1 text-sm text-gray-700 hover:bg-gray-50 rounded"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          Siparişlerim
                         </Link>
                         <button 
                           className="w-full text-left px-2 py-1 text-sm text-gray-700 hover:bg-gray-50 rounded flex items-center"

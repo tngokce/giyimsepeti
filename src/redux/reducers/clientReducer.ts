@@ -11,6 +11,7 @@ export const SET_CREDIT_CARDS = 'SET_CREDIT_CARDS';
 export const ADD_CREDIT_CARD = 'ADD_CREDIT_CARD';
 export const UPDATE_CREDIT_CARD = 'UPDATE_CREDIT_CARD';
 export const DELETE_CREDIT_CARD = 'DELETE_CREDIT_CARD';
+export const SET_ORDERS = 'SET_ORDERS';
 
 // Action Interfaces
 interface SetUserAction {
@@ -73,6 +74,11 @@ interface DeleteCreditCardAction {
   payload: number;
 }
 
+interface SetOrdersAction {
+  type: typeof SET_ORDERS;
+  payload: any[];
+}
+
 export type ClientActionTypes = 
   | SetUserAction 
   | SetRolesAction 
@@ -85,13 +91,15 @@ export type ClientActionTypes =
   | SetCreditCardsAction
   | AddCreditCardAction
   | UpdateCreditCardAction
-  | DeleteCreditCardAction;
+  | DeleteCreditCardAction
+  | SetOrdersAction;
 
 // Initial State
 interface ClientState {
   user: any;
   addressList: any[];
   creditCards: any[];
+  orders: any[];
   roles: any[];
   theme: string;
   language: string;
@@ -101,6 +109,7 @@ const initialState: ClientState = {
   user: null,
   addressList: [],
   creditCards: [],
+  orders: [],
   roles: [],
   theme: 'light',
   language: 'tr'
@@ -172,6 +181,11 @@ const clientReducer = (state = initialState, action: ClientActionTypes): ClientS
       return {
         ...state,
         creditCards: state.creditCards.filter(card => card.id !== action.payload)
+      };
+    case SET_ORDERS:
+      return {
+        ...state,
+        orders: action.payload
       };
     default:
       return state;

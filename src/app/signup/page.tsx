@@ -157,8 +157,8 @@ export default function SignupPage() {
                     message: 'Şifre en az 8 karakter olmalıdır'
                   },
                   pattern: {
-                    value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])/,
-                    message: 'Şifre en az bir rakam, bir küçük harf, bir büyük harf ve bir özel karakter içermelidir'
+                    value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/,
+                    message: 'Şifre en az bir rakam, bir küçük harf ve bir büyük harf içermelidir'
                   }
                 })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#23A6F0]"
